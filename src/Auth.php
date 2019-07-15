@@ -44,7 +44,7 @@ class Auth implements Module {
     public function init(): void{
         if ($this->tabula->registry->hasAdminPanel()){
             $adminPane = $this->tabula->registry->getAdminPanel();
-            $adminPane->registerPane(new \Tabula\Modules\Auth\Panes\UsersPane());
+            $adminPane->registerPane(new \Tabula\Modules\Auth\Panes\UsersPane(),'Auth');
             //TODO: Register other admin panes
         }
         //Check if user is logged in

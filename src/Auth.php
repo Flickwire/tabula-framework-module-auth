@@ -58,4 +58,12 @@ class Auth implements Module {
     public function getName(): string{
         return 'tabula-auth';
     }
+
+    public function renderLogin(): void{
+        echo("Login Page Not Yet Implemented");
+    }
+
+    public function renderRegister(): void{
+        echo("Register Page Not Yet Implemented");
+    }
 }

@@ -8,6 +8,10 @@ use Tabula\Router;
 use Tabula\Router\Route;
 
 class Auth implements Module {
+    private $user;
+
+    //Can use this to check if user is logged in
+    public $isLoggedIn;
 
     public function upgrade(string $version): string{
         //Initial Setup
@@ -41,6 +45,14 @@ class Auth implements Module {
     public function init(): void{
         if ($this->tabula->registry->hasAdminPanel()){
             //TODO: Register admin pane
+        }
+        //Check if user is logged in
+        if ($this->tabula->session->hasUserId()){
+            $this->user = User::load($this->tabula->session->getUserId());
+            $this->isLoggedIn = true;
+        } else {
+            $this->user = User::guest();
+            $this->isLoggedIn = false;
         }
     }
 

@@ -1,0 +1,80 @@
+<form>
+        <div class="ui form">
+            <h3 class="ui header">Create User</h3>
+            <div class="ui error message">
+            </div>
+            <div class="required field">
+                <label>Email Address</label>
+                <div class="ui input" style="overflow:hidden;">
+                    <input type="text" name="email" />
+                </div>
+            </div>
+            <div class="required field">
+                <label>Name</label>
+                <div class="ui input" style="overflow:hidden;">
+                    <input type="text" name="name" />
+                </div>
+            </div>
+            <div class="two fields">
+                <div class="required field">
+                    <label>Password</label>
+                    <div class="ui input" style="overflow:hidden;">
+                        <input type="password" name="password" />
+                    </div>
+                </div>
+                <div class="required field">
+                    <label>Password (again)</label>
+                    <div class="ui input" style="overflow:hidden;">
+                        <input type="password" name="password2" />
+                    </div>
+                </div>
+            </div>
+              <div class="ui clear button right floated">Cancel</div>
+              <div class="ui primary submit button right floated">Save</div>
+        </div>
+        <script>
+          window.onload = function(){
+            $('.ui.form')
+            .form({
+              fields: {
+                name: {
+                  identifier  : 'name',
+                  rules: [
+                    {
+                      type   : 'empty',
+                      prompt : 'Please enter your name as you would like it displayed'
+                    }
+                  ]
+                },
+                gender: {
+                  identifier  : 'email',
+                  rules: [
+                    {
+                      type   : 'email',
+                      prompt : 'Please enter a valid email address'
+                    }
+                  ]
+                },
+                password: {
+                  identifier : 'password',
+                  rules: [
+                    {
+                      type   : 'length[10]',
+                      prompt : 'Your password must be at least 10 characters'
+                    }
+                  ]
+                },
+                password2: {
+                  identifier : 'password2',
+                  rules: [
+                    {
+                      type   : 'match[password]',
+                      prompt : 'Your passwords must match'
+                    }
+                  ]
+                }
+              }
+            });
+          }
+        </script>
+    </form>

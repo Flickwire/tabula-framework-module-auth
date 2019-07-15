@@ -1,7 +1,7 @@
 <?php
 namespace Tabula\Modules\Auth\Panes;
 
-if (interface_exists(\Tabula\Modules\Admin\AdminPane)){
+if (interface_exists("\Tabula\Modules\Admin\AdminPane")){
     class UsersPane implements \Tabula\Modules\Admin\AdminPane {
         public function render(\Tabula\Tabula $tabula): string{
             return "Users Pane";

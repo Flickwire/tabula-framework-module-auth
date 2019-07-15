@@ -1,5 +1,5 @@
 <?php
-namespace Tabula\Module\Auth;
+namespace Tabula\Modules\Auth;
 
 
 use Tabula\Tabula;
@@ -44,7 +44,7 @@ class Auth implements Module {
     public function init(): void{
         if ($this->tabula->registry->hasAdminPanel()){
             $adminPane = $this->tabula->registry->getAdminPanel();
-            $adminPane->registerPane(new \Tabula\Modules\Auth\Panes\UsersPane(),'Auth');
+            $adminPane->registerPane(new \Tabula\Modules\Auth\Panes\UsersPane());
             //TODO: Register other admin panes
         }
         //Check if user is logged in

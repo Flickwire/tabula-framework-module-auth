@@ -1,3 +1,3 @@
 <?php
 
-$module = new \Tabula\Module\Auth\Auth($tabula);
+$module = new \Tabula\Modules\Auth\Auth($tabula);

@@ -1,0 +1,50 @@
+<?php
+namespace Tabula\Module\Auth;
+
+
+use Tabula\Tabula;
+use Tabula\Module;
+use Tabula\Router;
+use Tabula\Router\Route;
+
+class Auth implements Module {
+
+    public function upgrade(string $version): string{
+        //Initial Setup
+        if ($version === ''){
+            //Set up db tables
+            $db = $tabula->db;
+
+            $db->query('CREATE TABLE tb_users (id BIGINT AUTO_INCREMENT NOT NULL, email NVARCHAR(320) NOT NULL, passwd VARCHAR(255) NOT NULL, displayname NVARCHAR(200) NOT NULL, CONSTRAINT PK PRIMARY KEY (id));');
+            $db->query('CREATE TABLE tb_usergroups (id BIGINT AUTO_INCREMENT NOT NULL, displayname NVARCHAR(255) NOT NULL, CONSTRAINT PK PRIMARY KEY (id));');
+            $db->query('CREATE TABLE tb_users_usergroups (user BIGINT NOT NULL, usergroup BIGINT NOT NULL, CONSTRAINT PK PRIMARY KEY (user,usergroup), CONSTRAINT FK_user FOREIGN KEY (user) REFERENCES tb_users(id), CONSTRAINT FK_usergroup FOREIGN KEY (usergroup) REFERENCES tb_usergroups(id));');
+            $db->query('CREATE TABLE tb_users_permissions (id BIGINT AUTO_INCREMENT NOT NULL, user BIGINT NOT NULL, permission NVARCHAR(255), CONSTRAINT PK PRIMARY KEY (id), CONSTRAINT FK_userperms_user FOREIGN KEY (user) REFERENCES tb_users(id));');
+            $db->query('CREATE TABLE tb_usergroups_permissions (id BIGINT AUTO_INCREMENT NOT NULL, usergroup BIGINT NOT NULL, permission NVARCHAR(255), CONSTRAINT PK PRIMARY KEY (id), CONSTRAINT FK_groupperms_usergroup FOREIGN KEY (usergroup) REFERENCES tb_usergroups(id));');
+        
+            $db->query('INSERT INTO tb_users (email, passwd, displayname) VALUES ("info@polymathic.ltd","$argon2id$v=19$m=1024,t=2,p=2$UUxDd2xleVU2cUlqdEVwVQ$nCqeHS2fTuNPn9uoYliSbl8Epp/R8bEGoTP6w6qZdSo","Polymathic Ltd.");');
+
+            return '1.0';
+        }
+        return $version;
+    }
+
+    public function registerRoutes(Router $router): void{
+        $router->register(new Route("/login",$this,"renderLogin"));
+        $router->register(new Route("/register",$this,"renderRegister"));
+    }
+
+    public function preInit(Tabula $tabula): void{
+        $this->tabula = $tabula;
+        $tabula->registry->setAuthHandler($this);
+    }
+
+    public function init(): void{
+        if ($this->tabula->registry->hasAdminPanel()){
+            //TODO: Register admin pane
+        }
+    }
+
+    public function getName(): string{
+        return 'tabula-auth';
+    }
+}

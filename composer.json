@@ -1,0 +1,29 @@
+{
+    "name": "tabula/module-auth",
+    "description": "Tabula Auth Module",
+    "type": "tabula-module",
+    "license": "Proprietary", 
+    "authors": [
+        {
+            "name": "Skye",
+            "email": "skye@domos.me.uk"
+        }
+    ],
+    "repositories": [{
+        "type": "composer",
+        "url": "https://packages.lovelace.digital"
+    }],
+    "require": {
+        "polymathic/tabula": "dev-master",
+        "polymathic/tabula-moduleinstaller": "dev-master",
+        "semantic/ui": "^2.4"
+    },
+    "suggest": {
+        "tabula/module-admin": "Enables adding and managing users in admin area"
+    },
+    "autoload": {
+        "psr-4": {
+            "Tabula\\Modules\\Auth\\": "src/"
+        }
+    }
+}

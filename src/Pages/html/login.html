@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Tabula - Login</title>
+    <link href="_{SEMANTIC_PATH}_semantic.min.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="ui middle aligned center aligned grid" style="height: 100%;">
+        <div class="eleven wide mobile eight wide tablet six wide computer five wide large screen four wide widescreen column">
+            <h1 class="ui heading">Tabula</h1>
+            <form class="ui large _{ERROR_STATE}_form" method="POST">
+                <div class="ui piled segment">
+                    <div class="ui field">
+                        <input name="email" type="text" placeholder="example@example.com"/>
+                    </div>
+                    <div class="ui field">
+                        <input name="password" type="password" placeholder="password"/>
+                    </div>
+                    <div class="ui button submit primary">Login</div>
+                    <a class="ui button" href="_{REGISTER_URL}_">Register</a>
+                </div>
+                <div class="ui error message">
+                    _{ERRORS}_
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js" async></script>
+    <script src="_{SEMANTIC_PATH}_semantic.min.js" async defer></script>
+    <script>
+      window.addEventListener("load",function(event) {
+        $('.ui.form')
+        .form({
+          fields: {
+            name: {
+                identifier  : 'password',
+                rules: [
+                {
+                  type   : 'empty',
+                  prompt : 'Please enter your password'
+                }
+                ]
+            },
+            email: {
+                identifier  : 'email',
+                rules: [
+                {
+                    type   : 'email',
+                    prompt : 'Please enter a valid email address'
+                }
+                ]
+            }
+          }
+        });
+      });
+    </script>
+</body>
+</html>

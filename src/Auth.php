@@ -7,6 +7,7 @@ use Tabula\Module;
 use Tabula\Router;
 use Tabula\Router\Route;
 use Tabula\Database\Adapter\AbstractAdapter;
+use Tabula\Modules\Auth\Pages\Login;
 
 class Auth implements Module {
     private $user;
@@ -62,7 +63,7 @@ class Auth implements Module {
     }
 
     public function renderLogin(): void{
-        echo("Login Page Not Yet Implemented");
+        (new Login($this->tabula,$this))->render();
     }
 
     public function renderRegister(): void{

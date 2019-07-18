@@ -12,7 +12,7 @@ class Auth implements Module {
     private $user;
 
     //Can use this to check if user is logged in
-    public $isLoggedIn;
+    public $isLoggedIn = false;
 
     public function upgrade(string $version, AbstractAdapter $db): string{
         //Initial Setup

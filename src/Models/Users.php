@@ -4,11 +4,13 @@ namespace Tabula\Modules\Auth\Models;
 use Tabula\Modules\Auth\User;
 
 class Users{
+    private $tabula;
     private $db;
     private $table = 'tb_users';
 
-    public function __construct($db){
-        $this->db = $db;
+    public function __construct($tabula){
+        $this->db = $tabula->db;
+        $this->tabula = $tabula;
     }
 
     public function getUsers(int $offset = 0, int $limit = 0){
@@ -55,5 +57,20 @@ class Users{
     public function delete($id){
         $query = "DELETE FROM {$this->table} WHERE id = ?i";
         $this->db->query($query,$id);
+    }
+
+    public function login(string $email, string $password){
+        $user = $this->tabula->db->query("SELECT * FROM tb_users WHERE email = ?s",$email)->fetch();
+        if (!$user) {
+            return false;
+        }
+        //check password
+        $verify = password_verify($password, $user['passwd']);
+        unset($password, $user['passwd']);
+        if (!$verify) {
+            return false;
+        }
+        $this->tabula->session->setUserId($user['id']);
+        return true;
     }
 }

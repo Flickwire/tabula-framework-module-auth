@@ -40,12 +40,14 @@ class Auth implements Module {
     public function preInit(Tabula $tabula): void{
         $this->tabula = $tabula;
         $tabula->registry->setAuthHandler($this);
+        $tabula->renderer->registerTemplateDir(__DIR__.DS.'templates');
     }
 
     public function init(): void{
         if ($this->tabula->registry->hasAdminPanel()){
             $adminPane = $this->tabula->registry->getAdminPanel();
             $adminPane->registerPane(new \Tabula\Modules\Auth\Panes\UsersPane(),'Auth');
+            $adminPane->registerPane(new \Tabula\Modules\Auth\Panes\OptionsPane(),'Auth');
             //TODO: Register other admin panes
         }
         //Check if user is logged in

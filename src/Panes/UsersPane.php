@@ -12,7 +12,7 @@ if (interface_exists("\Tabula\Modules\Admin\AdminPane")){
         public function render(\Tabula\Tabula $tabula): string{
             $this->tabula = $tabula;
             $this->request = $this->tabula->registry->getRequest();
-            $this->userModel = new Users($tabula->db);
+            $this->userModel = new Users($tabula);
             $action = $tabula->registry->getRequest()->get('action');
             switch($action){
                 case 'create':

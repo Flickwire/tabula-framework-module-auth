@@ -2,18 +2,17 @@
 namespace Tabula\Modules\Auth\Panes;
 
 use Tabula\Modules\Auth\Models\Users;
+use Tabula\Renderer\Page;
 
-if (interface_exists("\Tabula\Modules\Admin\AdminPane")){
-    class UsersPane implements \Tabula\Modules\Admin\AdminPane {
-        private $tabula;
+if (class_exists("\Tabula\Modules\Admin\AdminPane")){
+    class UsersPane extends \Tabula\Modules\Admin\AdminPane {
         private $request;
         private $userModel;
 
-        public function render(\Tabula\Tabula $tabula): string{
-            $this->tabula = $tabula;
+        public function render(): string{
             $this->request = $this->tabula->registry->getRequest();
-            $this->userModel = new Users($tabula);
-            $action = $tabula->registry->getRequest()->get('action');
+            $this->userModel = new Users($this->tabula);
+            $action = $this->tabula->registry->getRequest()->get('action');
             switch($action){
                 case 'create':
                     return $this->createUser();
@@ -29,28 +28,18 @@ if (interface_exists("\Tabula\Modules\Admin\AdminPane")){
         }
 
         private function listUsers(): string{
-            $outMarkup = \file_get_contents(__DIR__.DS."html".DS."listUsers.html");
+            $page = new Page($this->tabula,"modules/admin/panes/auth/listUsers.html");
+            $this->tabula->renderer->addScript('auth/listUsers.js');
+
             $users = $this->userModel->getUsers();
-            foreach ($users as $user){
-                $outMarkup = \str_replace("_{USERS}_","
-                <tr>
-                <td>{$user['displayname']}</td>
-                <td>{$user['email']}</td>
-                <td><a class=\"ui small negative right floated delete button\" href=\"{$this->request->getSelf(['action'=>'delete', 'id'=>$user['id']])}\">
-                    Delete
-                </a><a class=\"ui small right floated button\" href=\"{$this->request->getSelf(['action'=>'edit', 'id'=>$user['id']])}\">
-                    Edit
-                </a></td>
-                </tr>
-                _{USERS}_
-                ",$outMarkup);
-            }
-            $outMarkup = \str_replace("_{USERS}_","",$outMarkup);
-            $outMarkup = \str_replace("_{CREATE_URL}_",$this->request->getSelf(['action'=>'create']),$outMarkup);
-            return $outMarkup;
+            $page->set('users',$users);
+            
+            return $page->render(true);
         }
 
         private function createUser(): string{
+            $page = new Page($this->tabula,"modules/admin/panes/auth/newUser.html");
+            
             if ($this->request->getMethod() === 'POST'){
                 $name = $this->request->get('name',true);
                 $email = $this->request->get('email',true);
@@ -65,9 +54,8 @@ if (interface_exists("\Tabula\Modules\Admin\AdminPane")){
                     die();
                 }
             }
-            $outMarkup = \file_get_contents(__DIR__.DS."html".DS."newUser.html");
-            $outMarkup = \str_replace("_{CANCEL_URL}_",$this->request->getSelf([],['action']),$outMarkup);
-            return $outMarkup;
+
+            return $page->render(true);
         }
 
         private function validateUser($name, $email, $password, $password2){

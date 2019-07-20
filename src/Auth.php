@@ -41,13 +41,14 @@ class Auth implements Module {
         $this->tabula = $tabula;
         $tabula->registry->setAuthHandler($this);
         $tabula->renderer->registerTemplateDir(__DIR__.DS.'templates');
+        $tabula->renderer->registerScriptDir(__DIR__.DS.'scripts');
     }
 
     public function init(): void{
         if ($this->tabula->registry->hasAdminPanel()){
             $adminPane = $this->tabula->registry->getAdminPanel();
-            $adminPane->registerPane(new \Tabula\Modules\Auth\Panes\UsersPane(),'Auth');
-            $adminPane->registerPane(new \Tabula\Modules\Auth\Panes\OptionsPane(),'Auth');
+            $adminPane->registerPane(new \Tabula\Modules\Auth\Panes\UsersPane($this->tabula),'Auth');
+            $adminPane->registerPane(new \Tabula\Modules\Auth\Panes\OptionsPane($this->tabula),'Auth');
             //TODO: Register other admin panes
         }
         //Check if user is logged in

@@ -1,0 +1,33 @@
+<form class="ui form" method="POST">
+    <h3 class="ui header">Create User</h3>
+    <div class="ui error message">
+    </div>
+    <div class="required field">
+        <label>Email Address</label>
+        <div class="ui input" style="overflow:hidden;">
+            <input type="text" name="email" />
+        </div>
+    </div>
+    <div class="required field">
+        <label>Name</label>
+        <div class="ui input" style="overflow:hidden;">
+            <input type="text" name="name" />
+        </div>
+    </div>
+    <div class="two fields">
+        <div class="required field">
+            <label>Password</label>
+            <div class="ui input" style="overflow:hidden;">
+                <input type="password" name="password" />
+            </div>
+        </div>
+        <div class="required field">
+            <label>Password (again)</label>
+            <div class="ui input" style="overflow:hidden;">
+                <input type="password" name="password2" />
+            </div>
+        </div>
+    </div>
+    <a class="ui clear negative button right floated" href="{{ request.getSelf([],['action']) }}">Cancel</a>
+    <a class="ui primary submit button right floated">Save</a>
+</form>

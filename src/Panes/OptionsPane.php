@@ -2,20 +2,19 @@
 namespace Tabula\Modules\Auth\Panes;
 
 //use Tabula\Models\Options;
+use Tabula\Renderer\Page;
 
-if (interface_exists("\Tabula\Modules\Admin\AdminPane")){
-    class OptionsPane implements \Tabula\Modules\Admin\AdminPane {
-        private $tabula;
+if (class_exists("\Tabula\Modules\Admin\AdminPane")){
+    class OptionsPane extends \Tabula\Modules\Admin\AdminPane {
         private $request;
         //private $optionsModel;
 
-        public function render(\Tabula\Tabula $tabula): string{
-            $this->tabula = $tabula;
+        public function render(): string{
+            $page = new Page($this->tabula,"modules/admin/panes/auth/options.html");
             $this->request = $this->tabula->registry->getRequest();
             //$this->optionsModel = new Options($tabula->db);
 
-            $outMarkup = \file_get_contents(__DIR__.DS."html".DS."options.html");
-            return $outMarkup;
+            return $page->render(true);
         }
 
         /**

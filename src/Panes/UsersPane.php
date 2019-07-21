@@ -17,9 +17,7 @@ if (class_exists("\Tabula\Modules\Admin\AdminPane")){
                 case 'create':
                     return $this->createUser();
                 case 'edit':
-                    //$outMarkup = file_get_contents(__DIR__.DS."html".DS."newUser.html");
-                    //return $outMarkup;
-                    return 'edit';
+                    return $this->editUser();
                 case 'delete':
                     return $this->deleteUser();
                 default:
@@ -39,86 +37,63 @@ if (class_exists("\Tabula\Modules\Admin\AdminPane")){
 
         private function createUser(): string{
             $page = new Page($this->tabula,"modules/admin/panes/auth/newUser.html");
-            
+            $this->tabula->renderer->addScript('auth/newUser.js');
+
             if ($this->request->getMethod() === 'POST'){
                 $name = $this->request->get('name',true);
                 $email = $this->request->get('email',true);
                 $password = $this->request->get('password',true);
                 $password2 = $this->request->get('password2',true);
 
-                $passed = $this->validateUser($name,$email,$password,$password2);
+                $passed = $this->userModel->validateUser($name,$email,$password,$password2);
 
                 if($passed){
                     $this->userModel->newUser($name,$email,$password);
                     header('Location: ' . $this->request->getSelf([],['action'],true),true,303);
                     die();
                 }
+
+                $page->set('email', $email);
+                $page->set('name', $name);
             }
 
             return $page->render(true);
         }
 
-        private function validateUser($name, $email, $password, $password2){
-            $error = false;
-            $session = $this->tabula->session;
+        private function editUser(): string{
+            $page = new Page($this->tabula,"modules/admin/panes/auth/newUser.html");
+            $this->tabula->renderer->addScript('auth/editUser.js');
 
-            //password too short or absent
-            if(\is_null($password) || \strlen($password) < 12){
-                $session->addError('Your password must be at least 12 characters long');
-                $error = true;
-            } else {
+            $id = $this->request->get('id');
+            $user = $this->userModel->loadUser($id);
 
-                //password too short
-                if(\strlen($password) > 128){
-                    $session->addError('Your password may not be longer than 128 characters');
-                    $error = true;
-                }
-    
-                //password special character
-                if(!\preg_match('/[!"#$%&\'()*+,\-.\/:;<=>?@[\]^_`{|}~\\\\]/',$password)){
-                    $session->addError('Your password must contain a special character<br />(!"#$%&amp;\'()*+,-./:;&lt;=&gt;?@[]^_`{|}~\\)');
-                    $error = true;
-                }
-    
-                //password uppercase character
-                if(!\preg_match('/[A-Z]/',$password)){
-                    $session->addError('Your password must contain at least one uppercase character');
-                    $error = true;
-                }
-    
-                //password lowercase character
-                if(!\preg_match('/[a-z]/',$password)){
-                    $session->addError('Your password must contain at least one lowercase character');
-                    $error = true;
-                }
-    
-                //password number
-                if(!\preg_match('/[0-9]/',$password)){
-                    $session->addError('Your password must contain at least one number');
-                    $error = true;
-                }
-
-                //Password doesn't match
-                if($password !== $password2){
-                    $session->addError('Your passwords must match');
-                    $error = true;
-                }
-
-            }
-    
-            //email format
-            if(!\preg_match('/[^@]+@[^\.]+\..+/',$email)){
-                $session->addError('Please enter a valid email address');
-                $error = true;
+            if(!$user){
+                header('Location: ' . $this->request->getSelf([],['action','id'],true),true,303);
+                die();
             }
 
-            //password too short
-            if(\is_null($name) || \strlen($name) < 1){
-                $session->addError('Please enter your name as you would like it displayed');
-                $error = true;
+            $page->set('email', $user['email']);
+            $page->set('name', $user['displayname']);
+
+            if ($this->request->getMethod() === 'POST'){
+                $name = $this->request->get('name',true);
+                $email = $this->request->get('email',true);
+                $password = $this->request->get('password',true);
+                $password2 = $this->request->get('password2',true);
+
+                $passed = $this->userModel->validateUser($name,$email,$password,$password2,$id);
+
+                if($passed){
+                    $this->userModel->updateUser($id,$name,$email,$password);
+                    header('Location: ' . $this->request->getSelf([],['action','id'],true),true,303);
+                    die();
+                }
+
+                $page->set('email', $email);
+                $page->set('name', $name);
             }
 
-            return !$error;
+            return $page->render(true);
         }
 
         private function deleteUser(): string{

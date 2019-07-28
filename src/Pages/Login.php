@@ -22,18 +22,16 @@ class Login {
         $session = $this->tabula->session;
 
         $page = new Page($this->tabula, 'modules/auth/login.html');
-        $error = false;
+        $this->tabula->renderer->addScript('auth/login.js');
 
         if ($request->getMethod() === 'POST') {
             $email = $request->get('email',true);
             $password = $request->get('password',true);
             //Check form filled
             if (is_null($email) || $email === '') {
-                $error = true;
                 $session->addError("Please provide an email address");
             }
             if (!$error && (is_null($password) || $password === '')) {
-                $error = true;
                 $session->addError("Please provide a password");
             }
             if (!$error) {
@@ -42,7 +40,6 @@ class Login {
                     header('Location: ' . $session->getAfterAuthUrl(), true, 303);
                     die();
                 } else {
-                    $error = true;
                     $session->addError("Email address or password incorrect");
                 }
             }
@@ -51,7 +48,10 @@ class Login {
         //Show errors
         $errors = $session->getErrors();
         $page->set('errors',$errors);
-        $page->set('errorState',$error ? 'error' : '');
+
+        //Show messages
+        $messages = $session->getMessages();
+        $page->set('messages',$messages);
 
         //Add semantic
         $semantic = $this->tabula->registry->getUriBase() . '/vendor/semantic/ui/dist/';
@@ -59,6 +59,7 @@ class Login {
         $page->set('semanticCss', $semantic . 'semantic.min.css');
 
         $page->set('urlRegister', $this->tabula->registry->getUriBase().'/register');
+        $page->set('title','Login');
 
         $page->render();
     }

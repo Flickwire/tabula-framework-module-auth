@@ -1,0 +1,46 @@
+{{ include("modules/auth/include/head.html") }}
+<div class="ui middle aligned center aligned grid" style="height: 100%;">
+    <div class="eleven wide mobile eight wide tablet six wide computer five wide large screen four wide widescreen column">
+        <h1 class="ui heading">Register</h1>
+        {% if errors %}
+        <form class="ui large error form" method="POST">
+        {% else %}
+        <form class="ui large form" method="POST">
+        {% endif %}
+            <div class="ui piled segment">
+                <div class="required field">
+                    <div class="ui input" style="overflow:hidden;">
+                        <input type="text" name="email" placeholder="email@example.com" value="{{ email }}" />
+                    </div>
+                </div>
+                <div class="required field">
+                    <div class="ui input" style="overflow:hidden;">
+                        <input type="text" name="name" placeholder="Name" value="{{ name }}" />
+                    </div>
+                </div>
+                <div class="two fields">
+                    <div class="required field">
+                        <div class="ui input" style="overflow:hidden;">
+                            <input type="password" name="password" placeholder="Password" />
+                        </div>
+                    </div>
+                    <div class="required field">
+                        <div class="ui input" style="overflow:hidden;">
+                            <input type="password" name="password2" placeholder="Repeat Password" />
+                        </div>
+                    </div>
+                </div>
+                <a class="ui primary submit button">Register</a>
+                <a class="ui clear negative button" href="{{ urlLogin }}">Cancel</a>
+            </div>
+            <div class="ui error message">
+                <ul class="list">
+                {% for error in errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+                </ul>
+            </div>
+        </form>
+    </div>
+</div>
+{{ include("modules/auth/include/foot.html") }}

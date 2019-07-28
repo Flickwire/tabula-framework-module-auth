@@ -8,6 +8,7 @@ use Tabula\Router;
 use Tabula\Router\Route;
 use Tabula\Database\Adapter\AbstractAdapter;
 use Tabula\Modules\Auth\Pages\Login;
+use Tabula\Modules\Auth\Pages\Register;
 
 class Auth implements Module {
     private $user;
@@ -53,7 +54,7 @@ class Auth implements Module {
         }
         //Check if user is logged in
         if ($this->tabula->session->hasUserId()){
-            $this->user = User::load($this->tabula->session->getUserId());
+            $this->user = new User(['displayname'=>'Name','email'=>'yeet'],[],[]);
             $this->isLoggedIn = true;
         } else {
             $this->user = User::guest();
@@ -70,6 +71,6 @@ class Auth implements Module {
     }
 
     public function renderRegister(): void{
-        echo("Register Page Not Yet Implemented");
+        (new Register($this->tabula,$this))->render();
     }
 }

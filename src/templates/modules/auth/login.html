@@ -1,65 +1,30 @@
-<!DOCTYPE html>
-<html lang="{{ lang }}">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Tabula - Login</title>
-    <link href="{{ semanticCss }}" rel="stylesheet" />
-</head>
-<body>
-    <div class="ui middle aligned center aligned grid" style="height: 100%;">
-        <div class="eleven wide mobile eight wide tablet six wide computer five wide large screen four wide widescreen column">
-            <h1 class="ui heading">Tabula</h1>
-            <form class="ui large {{ errorState }} form" method="POST">
-                <div class="ui piled segment">
-                    <div class="ui field">
-                        <input name="email" type="text" placeholder="example@example.com"/>
-                    </div>
-                    <div class="ui field">
-                        <input name="password" type="password" placeholder="password"/>
-                    </div>
-                    <div class="ui button submit primary">Login</div>
-                    <a class="ui button" href="{{ urlRegister }}">Register</a>
+{{ include("modules/auth/include/head.html") }}
+<div class="ui middle aligned center aligned grid" style="height: 100%;">
+    <div class="eleven wide mobile eight wide tablet six wide computer five wide large screen four wide widescreen column">
+        <h1 class="ui heading">Login</h1>
+        {% if errors %}
+        <form class="ui large error form" method="POST">
+        {% else %}
+        <form class="ui large form" method="POST">
+        {% endif %}
+            <div class="ui piled segment">
+                <div class="ui field">
+                    <input name="email" type="text" placeholder="example@example.com"/>
                 </div>
-                <div class="ui error message">
-                    <ul class="list">
-                    {% for error in errors %}
-                        <li>{{ error }}</li>
-                    {% endfor %}
-                    </ul>
+                <div class="ui field">
+                    <input name="password" type="password" placeholder="password"/>
                 </div>
-            </form>
-        </div>
+                <div class="ui button submit primary">Login</div>
+                <a class="ui button" href="{{ urlRegister }}">Register</a>
+            </div>
+            <div class="ui error message">
+                <ul class="list">
+                {% for error in errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+                </ul>
+            </div>
+        </form>
     </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js" async></script>
-    <script src="{{ semanticJs }}" async defer></script>
-    <script>
-      window.addEventListener("load",function(event) {
-        $('.ui.form')
-        .form({
-          fields: {
-            name: {
-                identifier  : 'password',
-                rules: [
-                {
-                  type   : 'empty',
-                  prompt : 'Please enter your password'
-                }
-                ]
-            },
-            email: {
-                identifier  : 'email',
-                rules: [
-                {
-                    type   : 'email',
-                    prompt : 'Please enter a valid email address'
-                }
-                ]
-            }
-          }
-        });
-      });
-    </script>
-</body>
-</html>
+</div>
+{{ include("modules/auth/include/foot.html") }}
